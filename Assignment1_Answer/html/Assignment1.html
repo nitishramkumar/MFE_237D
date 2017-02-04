@@ -1,0 +1,539 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Assignment1</title><meta name="generator" content="MATLAB 9.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-02-04"><meta name="DC.source" content="Assignment1.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">1a</a></li><li><a href="#3">1b</a></li><li><a href="#4">1c</a></li><li><a href="#5">2a</a></li><li><a href="#6">3a</a></li><li><a href="#7">3b</a></li><li><a href="#8">4</a></li><li><a href="#9">5a</a></li><li><a href="#10">5b</a></li><li><a href="#11">5c</a></li><li><a href="#12">5b</a></li></ul></div><pre class="codeinput"><span class="comment">%Assignment 1</span>
+<span class="comment">%Nitish Ramkumar, Stephan Du Toit, Yvonne Tong Yi, Baihan Chen</span>
+</pre><h2 id="2">1a</h2><pre class="codeinput">clear
+clc
+<span class="keyword">global</span> S0 r sigma T K
+S0=100;   <span class="comment">%Initial stock price</span>
+K=90; <span class="comment">%Strike price</span>
+r=0.02; <span class="comment">%risk-free rate</span>
+h=0.25; <span class="comment">%length of the period in years</span>
+T=4; <span class="comment">%# of periods</span>
+u=exp((r*h)+0.2*sqrt(h));   <span class="comment">%up move</span>
+d=exp((r*h)-0.2*sqrt(h)); <span class="comment">%down move</span>
+
+<span class="comment">% Straddle is long call and long put on the same strike.</span>
+<span class="comment">% The sum of the two values should lead to value of straddle</span>
+
+[~,optionprice1,hedgeportfoliostock1,hedgeportfolioriskfree1]=<span class="keyword">...</span>
+    EuropeanPricing(S0,@CallPayoff,r,h,u,d,T,0,[]);
+[~,optionprice2,hedgeportfoliostock2,hedgeportfolioriskfree2]=<span class="keyword">...</span>
+    EuropeanPricing(S0,@PutPayoff,r,h,u,d,T,0,[]);
+
+straddlePrice = optionprice1{T+1,1} + optionprice2{T+1,1};
+straddlePrice
+</pre><pre class="codeoutput">
+straddlePrice =
+
+   18.4891
+
+</pre><h2 id="3">1b</h2><pre class="codeinput">S0=100;
+K=90;
+T = 40;
+r=0.02;
+h = 0.025;
+u=exp((r*h)+0.2*sqrt(h));
+d=exp((r*h)-0.2*sqrt(h));
+
+[~,optionprice1,hedgeportfoliostock1,hedgeportfolioriskfree1]=<span class="keyword">...</span>
+    EuropeanPricing(S0,@CallPayoff,r,h,u,d,T,0,[]);
+[stockprice2,optionprice2,hedgeportfoliostock2,hedgeportfolioriskfree2]=<span class="keyword">...</span>
+    EuropeanPricing(S0,@PutPayoff,r,h,u,d,T,0,[]);
+
+straddlePrice = optionprice1{T+1,1} + optionprice2{T+1,1}
+</pre><pre class="codeoutput">
+straddlePrice =
+
+   17.7555
+
+</pre><h2 id="4">1c</h2><pre class="codeinput"><span class="comment">%Binary Payoff - If above K, option returns is K. If less than K, option</span>
+<span class="comment">%returns 0s</span>
+S0=100;   <span class="comment">%Initial stock price</span>
+K=90; <span class="comment">%Strike price</span>
+r=0.02; <span class="comment">%risk-free rate</span>
+h=0.25; <span class="comment">%length of the period in years</span>
+T=4; <span class="comment">%# of periods</span>
+u=exp((r*h)+0.2*sqrt(h));   <span class="comment">%up move</span>
+d=exp((r*h)-0.2*sqrt(h)); <span class="comment">%down move</span>
+
+[stockprice1,optionprice1,hedgeportfoliostock1,hedgeportfolioriskfree1]=<span class="keyword">...</span>
+    EuropeanPricing(S0,@BinaryPayoff,r,h,u,d,T,0,[]);
+
+binaryCallPrice = optionprice1{T+1,1}
+</pre><pre class="codeoutput">
+binaryCallPrice =
+
+   57.2647
+
+</pre><h2 id="5">2a</h2><p>American Option</p><pre class="codeinput">K=10;
+r = 0.01;
+h = 1/365;
+S0 = 10;
+T=250;
+u=exp((r*h)+0.15*sqrt(h));
+d=exp((r*h)-0.15*sqrt(h));
+
+[~,optionprice,hedgeportfoliostock,hedgeportfolioriskfree,exerciseDate]=<span class="keyword">...</span>
+    AmericanPricing(S0,@CallPayoff,r,h,u,d,T,0,[]);
+optionprice{T+1,1}
+
+[~,optionprice1,hedgeportfoliostock1,hedgeportfolioriskfree1,exerciseDate1]=<span class="keyword">...</span>
+    AmericanPricing(S0,@PutPayoff,r,h,u,d,T,0,[]);
+optionprice1{T+1,1}
+</pre><pre class="codeoutput">
+ans =
+
+    0.5286
+
+
+ans =
+
+    0.4653
+
+</pre><h2 id="6">3a</h2><p>Discrete Dividends Option</p><pre class="codeinput">S0=10;   <span class="comment">%Initial stock price</span>
+K=10; <span class="comment">%Strike price</span>
+r=0.02; <span class="comment">%risk-free rate</span>
+h=1/365; <span class="comment">%length of the period in years</span>
+T=200; <span class="comment">%# of periods</span>
+u=exp(0.2*sqrt(h));   <span class="comment">%up move</span>
+d=exp(-0.2*sqrt(h)); <span class="comment">%down move</span>
+delta = 0.05;
+DivDate = [50,100,150];
+
+[stockprice,optionprice,hedgeportfoliostock,hedgeportfolioriskfree,exerciseDate]=<span class="keyword">...</span>
+    DiscreteDividendsPricing(S0,@PutPayoff,<span class="string">'American'</span>,r,h,u,d,DivDate,delta,T);
+optionprice{T+1,1}
+[stockprice1,optionprice1,hedgeportfoliostock1,hedgeportfolioriskfree1,exerciseDate1]=<span class="keyword">...</span>
+    DiscreteDividendsPricing(S0,@CallPayoff,<span class="string">'American'</span>,r,h,u,d,DivDate,delta,T);
+optionprice1{T+1,1}
+</pre><pre class="codeoutput">
+ans =
+
+    1.4560
+
+
+ans =
+
+    0.3399
+
+</pre><h2 id="7">3b</h2><pre class="codeinput">S0=10;   <span class="comment">%Initial stock price</span>
+K=10; <span class="comment">%Strike price</span>
+r=0.02; <span class="comment">%risk-free rate</span>
+h=1/365; <span class="comment">%length of the period in years</span>
+T=200; <span class="comment">%# of periods</span>
+u=exp(0.2*sqrt(h));   <span class="comment">%up move</span>
+d=exp(-0.2*sqrt(h)); <span class="comment">%down move</span>
+delta = 0.05;
+DivDate = [50,100,150];
+
+[stockprice1,optionprice,hedgeportfoliostock,hedgeportfolioriskfree,exerciseDate]=<span class="keyword">...</span>
+    DiscreteDividendsPricing(S0,@StraddlePayoff,<span class="string">'American'</span>,r,h,u,d,DivDate,delta,T);
+optionprice{T+1,1}
+</pre><pre class="codeoutput">
+ans =
+
+    1.6420
+
+</pre><h2 id="8">4</h2><p>Asian Options</p><pre class="codeinput">S0=200;   <span class="comment">%Initial stock price</span>
+K=220; <span class="comment">%Strike price</span>
+r=0.02; <span class="comment">%risk-free rate</span>
+sigma = 0.2; <span class="comment">%standard deviation</span>
+h=1/365; <span class="comment">%length of the period in years</span>
+T=1; <span class="comment">%# of periods</span>
+NoOfPaths = 100000;
+
+randn(<span class="string">'seed'</span>,0);
+pathPayoffs = zeros(NoOfPaths,1);
+
+<span class="keyword">for</span> path = 1:NoOfPaths
+    <span class="comment">%stockPrices = GenerateStockPath(S0,u,d,r,T,h);</span>
+    stockPrices = GenerateStockPath(S0,r,T,h,sigma);
+    pathPayoffs(path) = max(mean(stockPrices)-K,0);
+<span class="keyword">end</span>
+montecarloprice = mean(pathPayoffs) * exp(-r * T)
+
+
+pd = fitdist(pathPayoffs * exp(-r * T),<span class="string">'Normal'</span>);
+paramci(pd)
+</pre><pre class="codeoutput">
+montecarloprice =
+
+    3.2299
+
+
+ans =
+
+    3.1749    8.8329
+    3.2849    8.9107
+
+</pre><h2 id="9">5a</h2><p>American Option LMC</p><pre class="codeinput">S0=200;   <span class="comment">%Initial stock price</span>
+K=220; <span class="comment">%Strike price</span>
+r=0.1; <span class="comment">%risk-free rate</span>
+sigma = 0.3; <span class="comment">%standard deviation</span>
+N=250; <span class="comment">%length of the period in years</span>
+T=1; <span class="comment">%# of periods</span>
+NoOfPaths = 100000;
+
+randn(<span class="string">'seed'</span>,0);
+price = LSLeastSquares(N,NoOfPaths)
+</pre><pre class="codeoutput">Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+
+price =
+
+   22.2625
+
+</pre><h2 id="10">5b</h2><pre class="codeinput">S0=200;   <span class="comment">%Initial stock price</span>
+K=220; <span class="comment">%Strike price</span>
+r=0.1; <span class="comment">%risk-free rate</span>
+sigma = 0.3; <span class="comment">%standard deviation</span>
+N=250; <span class="comment">%length of the period in years</span>
+T=1; <span class="comment">%# of periods</span>
+
+NoOfPaths = [10 100 1000 10000 100000];
+priceResult = zeros(5,2);
+priceResult(:,1) = NoOfPaths;
+<span class="keyword">for</span> pathCount = 1:length(priceResult)
+    priceResult(pathCount,2) = LSLeastSquares(N,priceResult(pathCount,1));
+<span class="keyword">end</span>
+bar(priceResult(:,2))
+set(gca,<span class="string">'xticklabel'</span>,NoOfPaths)
+</pre><pre class="codeoutput">Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+</pre><img vspace="5" hspace="5" src="Assignment1_01.png" style="width:560px;height:420px;" alt=""> <h2 id="11">5c</h2><h2 id="12">5b</h2><pre class="codeinput">S0=200;   <span class="comment">%Initial stock price</span>
+K=220; <span class="comment">%Strike price</span>
+r=0.1; <span class="comment">%risk-free rate</span>
+sigma = 0.3; <span class="comment">%standard deviation</span>
+NoOfPaths=100000; <span class="comment">%length of the period in years</span>
+T=1; <span class="comment">%# of periods</span>
+
+N = [3 10 100 250 1000];
+priceResult = zeros(5,2);
+priceResult(:,1) = N;
+<span class="keyword">for</span> pathCount = 1:length(priceResult)
+    priceResult(pathCount,2) = LSLeastSquares(priceResult(pathCount,1),NoOfPaths);
+<span class="keyword">end</span>
+bar(priceResult(:,2))
+set(gca,<span class="string">'xticklabel'</span>,N)
+</pre><pre class="codeoutput">Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+Warning: X is rank deficient to within machine precision. 
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%Assignment 1
+%Nitish Ramkumar, Stephan Du Toit, Yvonne Tong Yi, Baihan Chen
+
+%% 1a 
+clear
+clc
+global S0 r sigma T K
+S0=100;   %Initial stock price
+K=90; %Strike price
+r=0.02; %risk-free rate
+h=0.25; %length of the period in years
+T=4; %# of periods
+u=exp((r*h)+0.2*sqrt(h));   %up move 
+d=exp((r*h)-0.2*sqrt(h)); %down move 
+
+% Straddle is long call and long put on the same strike.
+% The sum of the two values should lead to value of straddle
+
+[~,optionprice1,hedgeportfoliostock1,hedgeportfolioriskfree1]=...
+    EuropeanPricing(S0,@CallPayoff,r,h,u,d,T,0,[]);
+[~,optionprice2,hedgeportfoliostock2,hedgeportfolioriskfree2]=...
+    EuropeanPricing(S0,@PutPayoff,r,h,u,d,T,0,[]);
+
+straddlePrice = optionprice1{T+1,1} + optionprice2{T+1,1};
+straddlePrice
+
+%% 1b
+S0=100;
+K=90;
+T = 40;
+r=0.02;
+h = 0.025;
+u=exp((r*h)+0.2*sqrt(h));
+d=exp((r*h)-0.2*sqrt(h));
+
+[~,optionprice1,hedgeportfoliostock1,hedgeportfolioriskfree1]=...
+    EuropeanPricing(S0,@CallPayoff,r,h,u,d,T,0,[]);
+[stockprice2,optionprice2,hedgeportfoliostock2,hedgeportfolioriskfree2]=...
+    EuropeanPricing(S0,@PutPayoff,r,h,u,d,T,0,[]);
+
+straddlePrice = optionprice1{T+1,1} + optionprice2{T+1,1}
+
+%% 1c
+%Binary Payoff - If above K, option returns is K. If less than K, option
+%returns 0s
+S0=100;   %Initial stock price
+K=90; %Strike price
+r=0.02; %risk-free rate
+h=0.25; %length of the period in years
+T=4; %# of periods
+u=exp((r*h)+0.2*sqrt(h));   %up move 
+d=exp((r*h)-0.2*sqrt(h)); %down move 
+
+[stockprice1,optionprice1,hedgeportfoliostock1,hedgeportfolioriskfree1]=...
+    EuropeanPricing(S0,@BinaryPayoff,r,h,u,d,T,0,[]);
+
+binaryCallPrice = optionprice1{T+1,1}
+
+
+%% 2a
+% American Option
+
+K=10;
+r = 0.01;
+h = 1/365;
+S0 = 10;
+T=250; 
+u=exp((r*h)+0.15*sqrt(h));
+d=exp((r*h)-0.15*sqrt(h));
+
+[~,optionprice,hedgeportfoliostock,hedgeportfolioriskfree,exerciseDate]=...
+    AmericanPricing(S0,@CallPayoff,r,h,u,d,T,0,[]);
+optionprice{T+1,1}
+
+[~,optionprice1,hedgeportfoliostock1,hedgeportfolioriskfree1,exerciseDate1]=...
+    AmericanPricing(S0,@PutPayoff,r,h,u,d,T,0,[]);
+optionprice1{T+1,1}
+
+%% 3a
+% Discrete Dividends Option
+
+S0=10;   %Initial stock price
+K=10; %Strike price
+r=0.02; %risk-free rate
+h=1/365; %length of the period in years
+T=200; %# of periods
+u=exp(0.2*sqrt(h));   %up move 
+d=exp(-0.2*sqrt(h)); %down move 
+delta = 0.05;
+DivDate = [50,100,150];
+
+[stockprice,optionprice,hedgeportfoliostock,hedgeportfolioriskfree,exerciseDate]=...
+    DiscreteDividendsPricing(S0,@PutPayoff,'American',r,h,u,d,DivDate,delta,T);
+optionprice{T+1,1}
+[stockprice1,optionprice1,hedgeportfoliostock1,hedgeportfolioriskfree1,exerciseDate1]=...
+    DiscreteDividendsPricing(S0,@CallPayoff,'American',r,h,u,d,DivDate,delta,T);
+optionprice1{T+1,1}
+
+%% 3b
+
+S0=10;   %Initial stock price
+K=10; %Strike price
+r=0.02; %risk-free rate
+h=1/365; %length of the period in years
+T=200; %# of periods
+u=exp(0.2*sqrt(h));   %up move 
+d=exp(-0.2*sqrt(h)); %down move 
+delta = 0.05;
+DivDate = [50,100,150];
+
+[stockprice1,optionprice,hedgeportfoliostock,hedgeportfolioriskfree,exerciseDate]=...
+    DiscreteDividendsPricing(S0,@StraddlePayoff,'American',r,h,u,d,DivDate,delta,T);
+optionprice{T+1,1}
+%% 4
+% Asian Options
+
+S0=200;   %Initial stock price
+K=220; %Strike price
+r=0.02; %risk-free rate
+sigma = 0.2; %standard deviation
+h=1/365; %length of the period in years
+T=1; %# of periods
+NoOfPaths = 100000;
+
+randn('seed',0);
+pathPayoffs = zeros(NoOfPaths,1);
+
+for path = 1:NoOfPaths
+    %stockPrices = GenerateStockPath(S0,u,d,r,T,h);
+    stockPrices = GenerateStockPath(S0,r,T,h,sigma);
+    pathPayoffs(path) = max(mean(stockPrices)-K,0);
+end
+montecarloprice = mean(pathPayoffs) * exp(-r * T)
+
+
+pd = fitdist(pathPayoffs * exp(-r * T),'Normal');
+paramci(pd)
+
+%% 5a
+% American Option LMC
+
+S0=200;   %Initial stock price
+K=220; %Strike price
+r=0.1; %risk-free rate
+sigma = 0.3; %standard deviation
+N=250; %length of the period in years
+T=1; %# of periods
+NoOfPaths = 100000;
+
+randn('seed',0);
+price = LSLeastSquares(N,NoOfPaths)
+
+%% 5b
+
+S0=200;   %Initial stock price
+K=220; %Strike price
+r=0.1; %risk-free rate
+sigma = 0.3; %standard deviation
+N=250; %length of the period in years
+T=1; %# of periods
+
+NoOfPaths = [10 100 1000 10000 100000];
+priceResult = zeros(5,2);
+priceResult(:,1) = NoOfPaths;
+for pathCount = 1:length(priceResult)
+    priceResult(pathCount,2) = LSLeastSquares(N,priceResult(pathCount,1));
+end
+bar(priceResult(:,2))
+set(gca,'xticklabel',NoOfPaths)
+
+%% 5c
+%% 5b
+
+S0=200;   %Initial stock price
+K=220; %Strike price
+r=0.1; %risk-free rate
+sigma = 0.3; %standard deviation
+NoOfPaths=100000; %length of the period in years
+T=1; %# of periods
+
+N = [3 10 100 250 1000];
+priceResult = zeros(5,2);
+priceResult(:,1) = N;
+for pathCount = 1:length(priceResult)
+    priceResult(pathCount,2) = LSLeastSquares(priceResult(pathCount,1),NoOfPaths);
+end
+bar(priceResult(:,2))
+set(gca,'xticklabel',N)
+
+##### SOURCE END #####
+--></body></html>
