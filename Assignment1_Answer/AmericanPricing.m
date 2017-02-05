@@ -24,6 +24,7 @@ for tau=1:T
             OptionPrices{T+2-k,T+2-tau});
         OptionPrices{T+2-k,T+1-tau}= max(valueIfExercised,valueIfNotExercised);
         
+        %Check if the exercise should happen at this node
         if(valueIfExercised > valueIfNotExercised)
             ExerciseDates{T+2-k,T+1-tau} = 'Exercise';
         else

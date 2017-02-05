@@ -1,6 +1,9 @@
-%Assignment 1
-%Nitish Ramkumar, Stephan Du Toit, Yvonne Tong Yi, Baihan Chen
 
+%%
+%
+% *Assignment 1*
+% *Nitish Ramkumar, Stephan Du Toit, Yvonne Tong Yi, Baihan Chen*
+%
 %% 1a 
 clear
 clc
@@ -22,8 +25,14 @@ d=exp((r*h)-0.2*sqrt(h)); %down move
     EuropeanPricing(S0,@PutPayoff,r,h,u,d,T,0,[]);
 
 straddlePrice = optionprice1{T+1,1} + optionprice2{T+1,1};
-straddlePrice
 
+straddlePrice
+%%
+% 
+%  *So the straddle Price is 18.4891*
+%  
+% 
+ 
 %% 1b
 S0=100;
 K=90;
@@ -40,6 +49,10 @@ d=exp((r*h)-0.2*sqrt(h));
 
 straddlePrice = optionprice1{T+1,1} + optionprice2{T+1,1}
 
+%%
+%
+%  *So the straddle Price is 17.7555*
+%
 %% 1c
 %Binary Payoff - If above K, option returns is K. If less than K, option
 %returns 0s
@@ -55,8 +68,10 @@ d=exp((r*h)-0.2*sqrt(h)); %down move
     EuropeanPricing(S0,@BinaryPayoff,r,h,u,d,T,0,[]);
 
 binaryCallPrice = optionprice1{T+1,1}
-
-
+%%
+%
+%  *The binary call option price is 63.6274*
+%
 %% 2a
 % American Option
 
@@ -68,14 +83,19 @@ T=250;
 u=exp((r*h)+0.15*sqrt(h));
 d=exp((r*h)-0.15*sqrt(h));
 
-[~,optionprice,hedgeportfoliostock,hedgeportfolioriskfree,exerciseDate]=...
+[~,callPrices,hedgeportfoliostock,hedgeportfolioriskfree,exerciseDate]=...
     AmericanPricing(S0,@CallPayoff,r,h,u,d,T,0,[]);
-optionprice{T+1,1}
+callPrices{T+1,1}
 
-[~,optionprice1,hedgeportfoliostock1,hedgeportfolioriskfree1,exerciseDate1]=...
+[~,putPrices,hedgeportfoliostock1,hedgeportfolioriskfree1,exerciseDate1]=...
     AmericanPricing(S0,@PutPayoff,r,h,u,d,T,0,[]);
-optionprice1{T+1,1}
+putPrices{T+1,1}
 
+%%
+%
+% Price of American Call Option is 0.5286
+% Price of American Call Option is 0.4653
+%
 %% 3a
 % Discrete Dividends Option
 
@@ -89,14 +109,18 @@ d=exp(-0.2*sqrt(h)); %down move
 delta = 0.05;
 DivDate = [50,100,150];
 
-[stockprice,optionprice,hedgeportfoliostock,hedgeportfolioriskfree,exerciseDate]=...
+[stockprice,putPrice,hedgeportfoliostock,hedgeportfolioriskfree,exerciseDate]=...
     DiscreteDividendsPricing(S0,@PutPayoff,'American',r,h,u,d,DivDate,delta,T);
-optionprice{T+1,1}
-[stockprice1,optionprice1,hedgeportfoliostock1,hedgeportfolioriskfree1,exerciseDate1]=...
+putPrice{T+1,1}
+[stockprice1,callPrice,hedgeportfoliostock1,hedgeportfolioriskfree1,exerciseDate1]=...
     DiscreteDividendsPricing(S0,@CallPayoff,'American',r,h,u,d,DivDate,delta,T);
-optionprice1{T+1,1}
-stockprice1{1,T+1}
+callPrice{T+1,1}
 
+%%
+%
+% American Put option with dividend is worth 1.456
+% American Call option with dividend is worth 0.3399
+%
 %% 3b
 
 S0=10;   %Initial stock price
@@ -109,9 +133,18 @@ d=exp(-0.2*sqrt(h)); %down move
 delta = 0.05;
 DivDate = [50,100,150];
 
-[stockprice1,optionprice,hedgeportfoliostock,hedgeportfolioriskfree,exerciseDate]=...
+[stockprice1,straddlePrice,hedgeportfoliostock,hedgeportfolioriskfree,exerciseDate]=...
     DiscreteDividendsPricing(S0,@StraddlePayoff,'American',r,h,u,d,DivDate,delta,T);
-optionprice{T+1,1}
+straddlePrice{T+1,1}
+
+%%
+%
+% *The American straddle price with dividend is 1.642. It is less than the sum of call and
+% put american option with dividend. This is because the when looked at it
+% seperately, we can excercise the put and call at seperate dates to
+% maximize the returns, which is not possible in a straddle, as we exercise both components at the same time* 
+%
+
 %% 4
 % Asian Options
 
@@ -127,16 +160,19 @@ randn('seed',0);
 pathPayoffs = zeros(NoOfPaths,1);
 
 for path = 1:NoOfPaths
-    %stockPrices = GenerateStockPath(S0,u,d,r,T,h);
     stockPrices = GenerateStockPath(S0,r,T,h,sigma);
     pathPayoffs(path) = max(mean(stockPrices)-K,0);
 end
 montecarloprice = mean(pathPayoffs) * exp(-r * T)
 
+sd = std(pathPayoffs * exp(-r * T))/sqrt(length(pathPayoffs));
+CIInterval = [montecarloprice - (1.96*sd),montecarloprice + (1.96*sd)]
 
-pd = fitdist(pathPayoffs * exp(-r * T),'Normal');
-paramci(pd)
-
+%%
+%
+% The monte carlo price is 3.2299
+% The Confidence interval at 95% confidence is (3.1749,3.2849)
+%
 %% 5a
 % American Option LMC
 
@@ -151,6 +187,10 @@ NoOfPaths = 100000;
 randn('seed',0);
 price = LSLeastSquares(N,NoOfPaths)
 
+%%
+%
+%price from the Least squares calculation is 22.2625
+%
 %% 5b
 
 S0=200;   %Initial stock price
@@ -170,7 +210,6 @@ bar(priceResult(:,2))
 set(gca,'xticklabel',NoOfPaths)
 
 %% 5c
-%% 5b
 
 S0=200;   %Initial stock price
 K=220; %Strike price
