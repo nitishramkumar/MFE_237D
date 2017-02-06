@@ -25,7 +25,6 @@ d=exp((r*h)-0.2*sqrt(h)); %down move
     EuropeanPricing(S0,@PutPayoff,r,h,u,d,T,0,[]);
 
 straddlePrice = optionprice1{T+1,1} + optionprice2{T+1,1};
-
 straddlePrice
 %%
 % 
@@ -206,6 +205,7 @@ priceResult(:,1) = NoOfPaths;
 for pathCount = 1:length(priceResult)
     priceResult(pathCount,2) = LSLeastSquares(N,priceResult(pathCount,1));
 end
+priceResult(:,2)
 bar(priceResult(:,2))
 set(gca,'xticklabel',NoOfPaths)
 
@@ -224,5 +224,6 @@ priceResult(:,1) = N;
 for pathCount = 1:length(priceResult)
     priceResult(pathCount,2) = LSLeastSquares(priceResult(pathCount,1),NoOfPaths);
 end
+priceResult(:,2)
 bar(priceResult(:,2))
 set(gca,'xticklabel',N)

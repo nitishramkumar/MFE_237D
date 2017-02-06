@@ -11,14 +11,15 @@ function price = LSLeastSquares(N,NoOfPaths)
     end
    
     exercisePositions(:) = N+1;
-    AllPaths(:,N+1) = max(AllPaths(:,N+1)-K,0);
+    AllPaths(:,N+1) = max(K-AllPaths(:,N+1),0);
     %Loop through all time periods from the back
     for count = 1:N
         currentColumn = N+1-count;
         X = AllPaths(:,currentColumn);
-        %Set all the nodes which have less than K as 0 for this time period
-        X(X<=K,:) = 0;
-        EX = max(X-K,0);
+        %Set all the nodes which have greater than K as 0 for this time
+        %period (as it is put)
+        EX = max(K-X,0);
+        X(X>=K,:) = 0;
         Y = zeros(NoOfPaths,1);
         
         validPos = find(X);
@@ -29,7 +30,7 @@ function price = LSLeastSquares(N,NoOfPaths)
         
         %Construct independent variable for the regression.Y = A + BX + BCX2
         RegX = [ones(size(X)) X power(X,2)];
-        betas = regress(Y,RegX);
+        betas = Y\RegX;
         
         %If value of Exercise at this node is greater than value of Y
         %Then set value as the option value at this node
