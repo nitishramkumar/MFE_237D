@@ -24,6 +24,14 @@ d=exp((r*h)-0.2*sqrt(h)); %down move
 [~,optionprice2,hedgeportfoliostock2,hedgeportfolioriskfree2]=...
     EuropeanPricing(S0,@PutPayoff,r,h,u,d,T,0,[]);
 
+NoOfStocks = zeros(T,T);
+BondValues = zeros(T,T);
+for j = 1:size(NoOfStocks,2)
+    for i = T+2-j:T+1
+        NoOfStocks(i,j) = hedgeportfoliostock1{i,j} + hedgeportfoliostock2{i,j};
+        BondValues(i,j) = hedgeportfolioriskfree1{i,j} + hedgeportfolioriskfree2{i,j};
+    end    
+end
 straddlePrice = optionprice1{T+1,1} + optionprice2{T+1,1};
 straddlePrice
 %%
@@ -46,6 +54,14 @@ d=exp((r*h)-0.2*sqrt(h));
 [stockprice2,optionprice2,hedgeportfoliostock2,hedgeportfolioriskfree2]=...
     EuropeanPricing(S0,@PutPayoff,r,h,u,d,T,0,[]);
 
+NoOfStocks = zeros(T,T);
+BondValues = zeros(T,T);
+for j = 1:size(NoOfStocks,2)
+    for i = T+2-j:T+1
+        NoOfStocks(i,j) = hedgeportfoliostock1{i,j} + hedgeportfoliostock2{i,j};
+        BondValues(i,j) = hedgeportfolioriskfree1{i,j} + hedgeportfolioriskfree2{i,j};
+    end    
+end
 straddlePrice = optionprice1{T+1,1} + optionprice2{T+1,1}
 
 %%
@@ -82,13 +98,22 @@ T=250;
 u=exp((r*h)+0.15*sqrt(h));
 d=exp((r*h)-0.15*sqrt(h));
 
-[~,callPrices,hedgeportfoliostock,hedgeportfolioriskfree,exerciseDate]=...
+[~,callPrices,hedgeportfoliostock1,hedgeportfolioriskfree1,exerciseDate]=...
     AmericanPricing(S0,@CallPayoff,r,h,u,d,T,0,[]);
 callPrices{T+1,1}
 
-[~,putPrices,hedgeportfoliostock1,hedgeportfolioriskfree1,exerciseDate1]=...
+[~,putPrices,hedgeportfoliostock2,hedgeportfolioriskfree2,exerciseDate1]=...
     AmericanPricing(S0,@PutPayoff,r,h,u,d,T,0,[]);
 putPrices{T+1,1}
+
+NoOfStocks = zeros(T,T);
+BondValues = zeros(T,T);
+for j = 1:size(NoOfStocks,2)
+    for i = T+2-j:T+1
+        NoOfStocks(i,j) = hedgeportfoliostock1{i,j} + hedgeportfoliostock2{i,j};
+        BondValues(i,j) = hedgeportfolioriskfree1{i,j} + hedgeportfolioriskfree2{i,j};
+    end    
+end
 
 %%
 %
