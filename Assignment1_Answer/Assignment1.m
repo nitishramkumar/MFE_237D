@@ -34,11 +34,6 @@ for j = 1:size(NoOfStocks,2)
 end
 straddlePrice = optionprice1{T+1,1} + optionprice2{T+1,1};
 straddlePrice
-%%
-% 
-%  *So the straddle Price is 18.4891*
-%  
-% 
  
 %% 1b
 S0=100;
@@ -64,10 +59,6 @@ for j = 1:size(NoOfStocks,2)
 end
 straddlePrice = optionprice1{T+1,1} + optionprice2{T+1,1}
 
-%%
-%
-%  *So the straddle Price is 17.7555*
-%
 %% 1c
 %Binary Payoff - If above K, option returns is K. If less than K, option
 %returns 0s
@@ -83,10 +74,7 @@ d=exp((r*h)-0.2*sqrt(h)); %down move
     EuropeanPricing(S0,@BinaryPayoff,r,h,u,d,T,0,[]);
 
 binaryCallPrice = optionprice1{T+1,1}
-%%
-%
-%  *The binary call option price is 63.6274*
-%
+
 %% 2a
 % American Option
 
@@ -115,11 +103,7 @@ for j = 1:size(NoOfStocks,2)
     end    
 end
 
-%%
-%
-% Price of American Call Option is 0.5286
-% Price of American Call Option is 0.4653
-%
+
 %% 3a
 % Discrete Dividends Option
 
@@ -140,11 +124,7 @@ putPrice{T+1,1}
     DiscreteDividendsPricing(S0,@CallPayoff,'American',r,h,u,d,DivDate,delta,T);
 callPrice{T+1,1}
 
-%%
-%
-% American Put option with dividend is worth 1.456
-% American Call option with dividend is worth 0.3399
-%
+
 %% 3b
 
 S0=10;   %Initial stock price
@@ -185,18 +165,15 @@ pathPayoffs = zeros(NoOfPaths,1);
 
 for path = 1:NoOfPaths
     stockPrices = GenerateStockPath(S0,r,T,h,sigma);
-    pathPayoffs(path) = max(mean(stockPrices)-K,0);
+    %Ignore first element as it is S0
+    pathPayoffs(path) = max(mean(stockPrices(2:end))-K,0);
 end
 montecarloprice = mean(pathPayoffs) * exp(-r * T)
 
 sd = std(pathPayoffs * exp(-r * T))/sqrt(length(pathPayoffs));
 CIInterval = [montecarloprice - (1.96*sd),montecarloprice + (1.96*sd)]
 
-%%
-%
-% The monte carlo price is 3.2299
-% The Confidence interval at 95% confidence is (3.1749,3.2849)
-%
+
 %% 5a
 % American Option LMC
 
@@ -211,10 +188,7 @@ NoOfPaths = 100000;
 randn('seed',0);
 price = LSLeastSquares(N,NoOfPaths)
 
-%%
-%
-%price from the Least squares calculation is 22.2625
-%
+
 %% 5b
 
 S0=200;   %Initial stock price
