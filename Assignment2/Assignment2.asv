@@ -118,6 +118,7 @@ xlabel('Volatility')
 ylabel('price of Put')
 hold on
 scatter(sigma,bsPrice)
+hold off
 
 %% 3a
 r0 = 0.05;
@@ -134,6 +135,8 @@ h = 1/250;
 
 randn('seed',0);
 db1 = randn(T/h,1).*sqrt(h);
+NoOf
+for
 rt = IR(r0,alpha,beta,delta,db1,T,h);
 histogram(rt)
 
@@ -169,7 +172,8 @@ K = 10;
 NoofSim = 10000;
 
 randn('seed',0);
-results = MonteCarloExotic_1(r0,S10,T,h,K,sigma11,sigma12,alpha,beta,delta,NoofSim)
+results = MonteCarloExotic_1(r0,S10,T,h,K,sigma11,sigma12,alpha,beta,delta,NoofSim);
+results(1)
 
 %% 3d
 r0 = 0.05;
@@ -199,9 +203,113 @@ r = 0.05;
 sigma = 0.3;
 mu = 0.2;
 delta = 0;
-
-stockPrices.all = GenerateStockPath(S0,mu,T,h,sigma);
+randn('seed',0);
+stockPricesAll = GenerateStockPath(S0,mu,T,h,sigma);
 periodsReq = (30/365)/h;
-stockPrices = stockPrices.all(1:(periodsReq+1));
+stockPrices = stockPricesAll(1:(periodsReq+1));
 %% 4b
-blackScholesPrices = BlackScholes(stockPrices,K,r,sigma,T:h:30/,type);
+blackScholesPrices = BlackScholes(stockPrices,K,r,sigma,(T:-h:30/365)','Call');
+
+%% 4c
+deltas = BlackScholesDelta(stockPrices,K,r,sigma,(T:-h:30/365)','Call');
+[replicatingPort,riskFree] = DeltaHedging(stockPrices,blackScholesPrices,deltas,r,h,0);
+
+figure(1)
+plot(stockPrices)
+title('Underlying')
+
+figure(2)
+plot(blackScholesPrices)
+hold on
+plot(replicatingPort)
+legend('Call Option','Replicating Portfolio','location','southwest')
+title('Replicating portfolio and blackScholes')
+hold off
+
+figure(3)
+plot(deltas)
+title('Delta')
+
+
+%% 4d
+randn('seed',0);
+stockJumpAll = GenerateStockPathWithJump(S0,mu,T,h,sigma,-0.1,0.5);
+stockJump = stockJumpAll(1:(periodsReq+1));
+BSJump= BlackScholes(stockJump,K,r,sigma,(T:-h:30/365)','Call');
+deltasJump = BlackScholesDelta(stockJump,K,r,sigma,(T:-h:30/365)','Call');
+[repPortJump,rfJump] = DeltaHedging(stockJump,BSJump,deltasJump,r,h,0);
+
+figure(1)
+plot(stockJump)
+title('Underlying')
+
+figure(2)
+plot(BSJump)
+hold on
+plot(repPortJump)
+legend('Call Option','Replicating Portfolio','location','southwest')
+title('Replicating portfolio and blackScholes')
+hold off
+
+figure(3)
+plot(deltasJump)
+title('Delta')
+
+%% 4e
+randn('seed',0);
+stockJumpAll1 = GenerateStockPathWithJump(S0,mu,T,h,sigma,0.1,0.5);
+stockJump1 = stockJumpAll1(1:(periodsReq+1));
+BSJump1= BlackScholes(stockJump1,K,r,sigma,(T:-h:30/365)','Call');
+deltasJump1 = BlackScholesDelta(stockJump1,K,r,sigma,(T:-h:30/365)','Call');
+[repPortJump1,rfJump1] = DeltaHedging(stockJump1,BSJump1,deltasJump1,r,h,0);
+
+figure(1)
+plot(stockJump1)
+title('Underlying')
+
+figure(2)
+plot(BSJump1)
+hold on
+plot(repPortJump1)
+legend('Call Option','Replicating Portfolio','location','southwest')
+title('Replicating portfolio and blackScholes')
+hold off
+
+figure(3)
+plot(deltasJump1)
+title('Delta')
+
+%% 4f
+[repPortTrans,rfTrans] = DeltaHedging(stockPrices,blackScholesPrices,deltas,r,h,0.002);
+figure(1)
+plot(stockPrices)
+title('Underlying')
+
+figure(2)
+plot(blackScholesPrices)
+hold on
+plot(repPortTrans)
+legend('Call Option','Replicating Portfolio','location','southwest')
+title('Replicating portfolio and blackScholes')
+hold off
+
+figure(3)
+plot(deltas)
+title('Delta')
+
+%% 5
+S0 = 100;%Initial stock price
+T = 0.5;%Maturity in days
+K = 100;%Strike
+r = 0.04; %IR
+sigma = 0.3;
+rho = -0.5;
+v0 = 0.01;
+k=6;
+theta = 0.02;
+lambda = 0;
+
+
+
+BlackScholes(S0,K,r,sqrt(theta),T,'Call')
+HestonModel(S0,sqrt(theta),r,T,0,K,rho,sigma,lambda,k,theta)

@@ -1,0 +1,56 @@
+function result = HestonIntegration(uFull,St,vt,r,tau,K,rho,sigma,lambda,k,theta,j)
+    u = uFull(uc);
+    xt = log(St);
+    b = [k+lambda-(rho*sigma) k+lambda];
+    uVal = [0.5 -0.5];
+    %d = sqrt((complex(-b,rho*sigma*u)).^2 - sigma^2.*complex(-u^2,(2*u).*uVal));
+    d1 = sqrt((complex(-b(1),(rho*sigma).*u)).^2 - sigma^2.*complex(-u.^2,u.*(2*uVal(1))));
+    d2 = sqrt((complex(-b(2),(rho*sigma).*u)).^2 - sigma^2.*complex(-u.^2,u.*(2*uVal(2))));
+    d = [d1 d2];
+
+    g1 = (b(1)+d(1)-complex(0,(-rho*sigma).*u))./(b(1)-d(1)-complex(0,(-rho*sigma).*u));
+    g2 = (b(2)+d(2)-complex(0,(-rho*sigma).*u))./(b(2)-d(2)-complex(0,(-rho*sigma).*u));
+    g = [g1 g2];
+
+    %Seperately calculate numerator and denominator and then divide
+    %g_num_real = b + real(d);
+    %g_num_imag = (-rho*sigma*u)+imag(d);
+    %g_num = complex(g_num_real,g_num_imag);
+    %g_den_real = b - real(d);
+    %g_den_imag = (-rho*sigma*u)-imag(d);
+    %g_den = complex(g_den_real,g_den_imag); 
+    %g = g_num./g_den;
+
+    %A_real = (b.*tau+d.*tau-2*log((1-g.*exp(d.*tau))./(1-g))).*(k*theta/(sigma^2));
+    %A_complex = (-rho*sigma*u*tau)*(k*theta/(sigma)^2) + r*u*tau;
+    %A = complex(A_real,A_complex);
+
+    A_1 = complex(0,(r * tau) .* u);
+    A_2_1 = (b(1) + d(1) - complex(0,(rho*sigma).*u)).*(tau*k*theta/(sigma)^2);
+    A_2_2 = (b(2) + d(2) - complex(0,(rho*sigma).*u)).*(tau*k*theta/(sigma)^2);
+    A_3_1 = (-2*k*theta/(sigma)^2)*log((1-g(1)*exp(d(1)*tau))/(1-g(1)));
+    A_3_2 = (-2*k*theta/(sigma)^2)*log((1-g(2)*exp(d(2)*tau))/(1-g(2)));
+    A = [A_1 + A_2_1 + A_3_1 A_1 + A_2_2 + A_3_2];
+
+    %B_multiplier = (1 - exp(d.*tau))/(1-(g.*exp(d.*tau)));
+    %B_real = ((b+d)/sigma^2).*B_multiplier;
+    %B_complex = ((-rho*sigma*u)/sigma^2).*B_multipler;
+    %B = complex(B_real,B_complex);
+
+    B_1_1 = (b(1) - complex(0,(rho*sigma).*u) + d(1))./(sigma)^2;
+    B_1_2 = (b(2) - complex(0,(rho*sigma).*u) + d(2))./(sigma)^2;
+    B_2_1 = (1 - exp(d(1)*tau))/(1-(g(1)*exp(d(1)*tau)));
+    B_2_2 = (1 - exp(d(2)*tau))/(1-(g(2)*exp(d(2)*tau)));
+    B = [B_1_1 .* B_2_1 B_1_2 .* B_2_2];
+
+    phi1 = exp(A(1) + B(1)*vt + complex(0,u.*xt));
+    phi2 = exp(A(2) + B(2)*vt + complex(0,u.*xt));
+    
+    result1 = real(exp(complex(0,u.*log(K))).*phi1./complex(0,u));
+    result2 = real(exp(complex(0,u.*log(K))).*phi2./complex(0,u));
+
+    if(j==1)
+        result = result1;
+    else if(j
+end
+

@@ -124,29 +124,34 @@ hold off
 r0 = 0.05;
 beta = 0.05;
 alpha = 0.6;
-sigma11 = 0.1;
-sigma12 = 0.2;
-sigma21 = 0.3;
-S10 = 10;
-S20 = 10;
+%sigma11 = 0.1;
+%sigma12 = 0.2;
+%sigma21 = 0.3;
+%S10 = 10;
+%S20 = 10;
 delta = 0.1;
 T = 1;
 h = 1/250;
 
 randn('seed',0);
 db1 = randn(T/h,1).*sqrt(h);
-rt = IR(r0,alpha,beta,delta,db1,T,h);
+NoOfSim = 1000;
+rTRes = zeros(NoOfSim,1);
+for i = 1:NoOfSim
+    rt = IR(r0,alpha,beta,delta,db1,T,h);
+    rTRes(i) = rt(length(rt));
+end    
 histogram(rt)
 
 %% 3b
 r0 = 0.05;
 beta = 0.05;
 alpha = 0.6;
-sigma11 = 0.1;
-sigma12 = 0.2;
-sigma21 = 0.3;
-S10 = 10;   
-S20 = 10;
+%sigma11 = 0.1;
+%sigma12 = 0.2;
+%sigma21 = 0.3;
+%S10 = 10;   
+%S20 = 10;
 delta = 0.1;
 T = 100;
 h = 1/52;
@@ -160,9 +165,9 @@ beta = 0.05;
 alpha = 0.6;
 sigma11 = 0.1;
 sigma12 = 0.2;
-sigma21 = 0.3;
+%sigma21 = 0.3;
 S10 = 10;
-S20 = 10;
+%S20 = 10;
 delta = 0.1;
 T = 0.5;
 h = 1/250;
@@ -295,5 +300,17 @@ figure(3)
 plot(deltas)
 title('Delta')
 
-%% 5
+%% 5a
+S0 = 100;%Initial stock price
+T = 0.5;%Maturity in days
+K = 100;%Strike
+r = 0.04; %IR
+sigma = 0.3;
+rho = -0.5;
+v0 = 0.01;
+k=6;
+theta = 0.02;
+lambda = 0;
 
+BlackScholes(S0,K,r,sqrt(theta),T,'Call')
+HestonModel(S0,sqrt(theta),r,T,0,K,rho,sigma,lambda,k,theta)
