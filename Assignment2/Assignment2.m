@@ -312,5 +312,81 @@ k=6;
 theta = 0.02;
 lambda = 0;
 
-BlackScholes(S0,K,r,sqrt(theta),T,'Call')
-HestonModel(S0,sqrt(theta),r,T,0,K,rho,sigma,lambda,k,theta)
+bsprice = BlackScholes(S0,K,r,sqrt(theta),T,'Call')
+price2 = HestonModel(S0,v0,r,T,0,K,rho,sigma,lambda,k,theta)
+%price = call_heston_cf(S0, v0, theta, k, sigma, r, rho, T, K)
+
+%% 5b
+T = 0.5;%Maturity in days
+K = 100;%Strike
+r = 0.04; %IR
+sigma = 0.3;
+rho = -0.5;
+v0 = 0.01;
+k=6;
+theta = 0.02;
+lambda = 0;
+
+bsprices = BlackScholes(70:130,K,r,sqrt(theta),T,'Call');
+hestonprices = zeros(length(70:130),1);
+for St = 70:130
+    hestonprices(St-69) = HestonModel(St,v0,r,T,0,K,rho,sigma,lambda,k,theta);
+end
+
+plot(70:130,bsprices)
+title('Plot of Black Scholes and heston based on underlying price')
+xlabel('Underlying price')
+ylabel('Option price')
+hold on
+plot(70:130,hestonprices)
+legend('Black Scholes Price','Heston Price')
+
+%% 5c
+S0 = 100;%Initial stock price
+T = 0.5;%Maturity in days
+K = 100;%Strike
+r = 0.04; %IR
+sigma = 0.3;
+rho = -0.5;
+v0 = 0.01;
+k=6;
+theta = 0.02;
+lambda = 0;
+St = 70:130;
+
+ImpliedVol = zeros(length(hestonprices),1);
+for i = 1:length(hestonprices)
+    ImpliedVol(i) = blsimpv(St(i),K,r,T,hestonprices(i));
+end
+
+plot(ImpliedVol)
+title('Implied Volatility for various stockPrices,rho=-0.5')
+xlabel('Stock Prices')
+ylabel('Implied Volatility')
+
+%% 5d
+T = 0.5;%Maturity in days
+K = 100;%Strike
+r = 0.04; %IR
+sigma = 0.3;
+rho = 0.5;
+v0 = 0.01;
+k=6;
+theta = 0.02;
+lambda = 0;
+StockPrices = 70:130;
+
+hestonprices = zeros(length(St),1);
+for St = 70:130
+    hestonprices(St-69) = HestonModel(St,v0,r,T,0,K,rho,sigma,lambda,k,theta);
+end
+
+ImpliedVol = zeros(length(hestonprices),1);
+for i = 1:length(hestonprices)
+    ImpliedVol(i) = blsimpv(StockPrices(i),K,r,T,hestonprices(i));
+end
+
+plot(ImpliedVol)
+title('Implied Volatility for various stockPrices,rho=0.5')
+xlabel('Stock Prices')
+ylabel('Implied Volatility')

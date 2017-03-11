@@ -1,9 +1,9 @@
-function stockprices = GenerateVolPath(k,theta,v0,h,sigma,T)
+function volvalues = GenerateVolPath(k,theta,v0,h,sigma,T)
    %This generates a Geometric Brownian Motion
    volvalues = zeros((T/h)+1,1);
-   stockprices(1) = S0;
-   for count = 2:length(stockprices)
-    stockprices(count) =stockprices(count-1)*(1+r*h + sigma*randn*sqrt(h));
+   volvalues(1) = v0;
+   for count = 2:length(volvalues)
+    volvalues(count) = volvalues(count-1) + k*(theta-volvalues(count-1))*h + sigma*(sqrt(volvalues(count-1)))*sqrt(h)*randn;
    end
 end
 
