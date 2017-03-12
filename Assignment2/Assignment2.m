@@ -136,7 +136,9 @@ for i = 1:NoOfSim
     rTRes(i) = rt(length(rt));
 end    
 histogram(rTRes)
-
+title('Plot of rT|r0 and T=1')
+ylabel('density')
+xlabel('rT value')
 %% 3b
 r0 = 0.05;
 beta = 0.05;
@@ -205,21 +207,30 @@ deltas = BlackScholesDelta(stockPrices,K,r,sigma,(T:-h:30/365)','Call');
 [replicatingPort,riskFree] = DeltaHedging(stockPrices,blackScholesPrices,deltas,r,h,0);
 
 figure(1)
-plot(stockPrices)
+subplot(3,1,1)
+plot(T:-h:30/365,stockPrices)
 title('Underlying')
+xlabel('Time To Expiry(yrs)')
+ylabel('Price')
+set ( gca, 'xdir', 'reverse' )
 
-figure(2)
-plot(blackScholesPrices)
+subplot(3,1,2)
+plot(T:-h:30/365,blackScholesPrices)
 hold on
-plot(replicatingPort)
+plot(T:-h:30/365,replicatingPort)
 legend('Call Option','Replicating Portfolio','location','southwest')
 title('Replicating portfolio and blackScholes')
+xlabel('Time To Expiry(yrs)')
+ylabel('Price')
+set ( gca, 'xdir', 'reverse' )
 hold off
 
-figure(3)
-plot(deltas)
+subplot(3,1,3)
+plot(T:-h:30/365,deltas)
 title('Delta')
-
+xlabel('Time To Expiry(yrs)')
+ylabel('Price')
+set ( gca, 'xdir', 'reverse' )
 
 %% 4d
 randn('seed',0);
@@ -230,20 +241,27 @@ deltasJump = BlackScholesDelta(stockJump,K,r,sigma,(T:-h:30/365)','Call');
 [repPortJump,rfJump] = DeltaHedging(stockJump,BSJump,deltasJump,r,h,0);
 
 figure(1)
-plot(stockJump)
+subplot(3,1,1)
+plot(T:-h:30/365,stockJump)
 title('Underlying')
+xlabel('Time To Expiry(yrs)')
+set ( gca, 'xdir', 'reverse' )
 
-figure(2)
-plot(BSJump)
+subplot(3,1,2)
+plot(T:-h:30/365,BSJump)
+xlabel('Time To Expiry(yrs)')
 hold on
-plot(repPortJump)
+plot(T:-h:30/365,repPortJump)
 legend('Call Option','Replicating Portfolio','location','southwest')
 title('Replicating portfolio and blackScholes')
+set ( gca, 'xdir', 'reverse' )
 hold off
 
-figure(3)
-plot(deltasJump)
+subplot(3,1,3)
+plot(T:-h:30/365,deltasJump)
 title('Delta')
+xlabel('Time To Expiry(yrs)')
+set ( gca, 'xdir', 'reverse' )
 
 %% 4e
 randn('seed',0);
@@ -254,38 +272,58 @@ deltasJump1 = BlackScholesDelta(stockJump1,K,r,sigma,(T:-h:30/365)','Call');
 [repPortJump1,rfJump1] = DeltaHedging(stockJump1,BSJump1,deltasJump1,r,h,0);
 
 figure(1)
-plot(stockJump1)
+subplot(3,1,1)
+plot(T:-h:30/365,stockJump1)
 title('Underlying')
+xlabel('Time To Expiry(yrs)')
+ylabel('Price')
+set ( gca, 'xdir', 'reverse' )
 
-figure(2)
-plot(BSJump1)
+subplot(3,1,2)
+plot(T:-h:30/365,BSJump1)
+xlabel('Time To Expiry(yrs)')
+ylabel('Price')
 hold on
-plot(repPortJump1)
+plot(T:-h:30/365,repPortJump1)
 legend('Call Option','Replicating Portfolio','location','southwest')
 title('Replicating portfolio and blackScholes')
+set ( gca, 'xdir', 'reverse' )
 hold off
 
-figure(3)
-plot(deltasJump1)
+subplot(3,1,3)
+plot(T:-h:30/365,deltasJump1)
+xlabel('Time To Expiry(yrs)')
+ylabel('Price')
 title('Delta')
+set ( gca, 'xdir', 'reverse' )
 
 %% 4f
 [repPortTrans,rfTrans] = DeltaHedging(stockPrices,blackScholesPrices,deltas,r,h,0.002);
 figure(1)
-plot(stockPrices)
+subplot(3,1,1)
+plot(T:-h:30/365,stockPrices)
 title('Underlying')
+xlabel('Time To Expiry(yrs)')
+ylabel('Price')
+set ( gca, 'xdir', 'reverse' )
 
-figure(2)
-plot(blackScholesPrices)
+subplot(3,1,2)
+plot(T:-h:30/365,blackScholesPrices)
 hold on
-plot(repPortTrans)
+plot(T:-h:30/365,repPortTrans)
 legend('Call Option','Replicating Portfolio','location','southwest')
 title('Replicating portfolio and blackScholes')
+xlabel('Time To Expiry(yrs)')
+ylabel('Price')
+set ( gca, 'xdir', 'reverse' )
 hold off
 
-figure(3)
-plot(deltas)
+subplot(3,1,3)
+plot(T:-h:30/365,deltas)
 title('Delta')
+xlabel('Time To Expiry(yrs)')
+ylabel('Price')
+set ( gca, 'xdir', 'reverse' )
 
 %% 5a
 S0 = 100;%Initial stock price
@@ -322,12 +360,10 @@ end
 
 diff = hestonprices - bsprices';
 plot(70:130,diff)
-title('Plot of Black Scholes and heston based on underlying price')
+title('Plot of Heston - BS prices based on underlying price')
 xlabel('Underlying price')
-ylabel('Option price')
-hold on
-plot(70:130,hestonprices)
-legend('Black Scholes Price','Heston Price')
+ylabel('Heston - BS')
+
 
 %% 5c
 S0 = 100;%Initial stock price
