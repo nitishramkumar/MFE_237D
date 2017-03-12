@@ -12,5 +12,5 @@ function result = MonteCarloMaxExotic(r0,S10,S20,T,h,K,sigma11,sigma12,sigma21,a
         
         payoff(i) = max(max(max(s1t),max(s2t))-K,0);
     end
-    result(1:3) = MonteCarloResults(payoff,rt(length(rt)),T);
+    result(1:3) = MonteCarloResults(payoff,mean(rt),T);
 end

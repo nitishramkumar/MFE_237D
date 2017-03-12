@@ -1,6 +1,6 @@
 %%
 %
-% *Assignment 1*
+% *Assignment 2* - 
 % *Nitish Ramkumar, Stephan Du Toit, Yvonne Tong Yi, Baihan Chen*
 %
 %% 1a
@@ -42,8 +42,7 @@ sigma=0.2; %SD
 delta = 0;
 
 randn('seed',0);
-%NoOfPaths = [100 1000 1000000 100000000];
-NoOfPaths = [10 20];
+NoOfPaths = [100 1000 1000000 100000000];
 N = length(NoOfPaths);
 priceResult = zeros(N,3);
 for count = 1:size(priceResult,1)
@@ -117,7 +116,7 @@ title('Plot of Monte Carlo put price with error bar and black scholes price')
 xlabel('Volatility')
 ylabel('price of Put')
 hold on
-scatter(sigma,bsPrice)
+plot(sigma,bsPrice)
 hold off
 
 %% 3a
@@ -129,14 +128,14 @@ T = 1;
 h = 1/250;
 
 randn('seed',0);
-db1 = randn(T/h,1).*sqrt(h);
 NoOfSim = 1000;
 rTRes = zeros(NoOfSim,1);
 for i = 1:NoOfSim
+    db1 = randn(T/h,1).*sqrt(h);
     rt = IR(r0,alpha,beta,delta,db1,T,h);
     rTRes(i) = rt(length(rt));
 end    
-histogram(rt)
+histogram(rTRes)
 
 %% 3b
 r0 = 0.05;
@@ -224,7 +223,7 @@ title('Delta')
 
 %% 4d
 randn('seed',0);
-stockJumpAll = GenerateStockPathWithJump(S0,mu,T,h,sigma,-0.1,0.5);
+stockJumpAll = GenerateStockPathWithJump(S0,mu,T,h,sigma,-0.1,0.25);
 stockJump = stockJumpAll(1:(periodsReq+1));
 BSJump= BlackScholes(stockJump,K,r,sigma,(T:-h:30/365)','Call');
 deltasJump = BlackScholesDelta(stockJump,K,r,sigma,(T:-h:30/365)','Call');
@@ -248,7 +247,7 @@ title('Delta')
 
 %% 4e
 randn('seed',0);
-stockJumpAll1 = GenerateStockPathWithJump(S0,mu,T,h,sigma,0.1,0.5);
+stockJumpAll1 = GenerateStockPathWithJump(S0,mu,T,h,sigma,0.1,0.25);
 stockJump1 = stockJumpAll1(1:(periodsReq+1));
 BSJump1= BlackScholes(stockJump1,K,r,sigma,(T:-h:30/365)','Call');
 deltasJump1 = BlackScholesDelta(stockJump1,K,r,sigma,(T:-h:30/365)','Call');
@@ -321,7 +320,8 @@ for St = 70:130
     hestonprices(St-69) = HestonModel(St,v0,r,T,0,K,rho,sigma,lambda,k,theta);
 end
 
-plot(70:130,bsprices)
+diff = hestonprices - bsprices';
+plot(70:130,diff)
 title('Plot of Black Scholes and heston based on underlying price')
 xlabel('Underlying price')
 ylabel('Option price')
@@ -347,7 +347,7 @@ for i = 1:length(hestonprices)
     ImpliedVol(i) = blsimpv(St(i),K,r,T,hestonprices(i));
 end
 
-plot(ImpliedVol)
+plot(St,ImpliedVol)
 title('Implied Volatility for various stockPrices,rho=-0.5')
 xlabel('Stock Prices')
 ylabel('Implied Volatility')
@@ -374,7 +374,7 @@ for i = 1:length(hestonprices)
     ImpliedVol(i) = blsimpv(StockPrices(i),K,r,T,hestonprices(i));
 end
 
-plot(ImpliedVol)
+plot(StockPrices,ImpliedVol)
 title('Implied Volatility for various stockPrices,rho=0.5')
 xlabel('Stock Prices')
 ylabel('Implied Volatility')
